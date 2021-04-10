@@ -1,16 +1,3 @@
-
-/*************************************************************/
-/*Part 2                                                     */
-/* Now you must do two things:                               */
-/* 1) add a count to the find method such that it counts how */
-/*    many comparisions you do every time you find an        */
-/*    abbreviation; and                                      */
-/* 2) in the insert method, add a call to the setHeight      */
-/*    method in the appropriate place(s) so that after you   */
-/*    inserted, the setHeight method adjusts the heights of  */
-/*    the inserted node's ancestors.
-/*************************************************************/
-
 /*************************************************************/
 /*Part 3                                                     */
 /* Write the methods (in red, below) that are part of the    */
@@ -83,6 +70,7 @@ TNode *AVL::find(string a) {
 	else {
 		TNode *tmp = root;
 		while (tmp != NULL) {
+			ct+=1;
 			if (debug) {
 				cout <<tmp->abbr << " and "<<a << endl;
 			}
@@ -110,7 +98,6 @@ TNode *AVL::find(string a) {
 			}
 			else {
 				if (debug) {
-					ct+=1;
 					cout << " in " << ct << endl;
 				}
 				return tmp;
@@ -139,6 +126,7 @@ bool AVL::insert(string ab, string d) {
 		    cout << "root NULL" << endl;
 		}
 		root = newnode;
+		newnode->height=1;
 		return true;
 	}
 	else {
@@ -148,6 +136,8 @@ bool AVL::insert(string ab, string d) {
 				if (tmp->left == NULL) {
 					tmp->left = newnode;
 					tmp->left->parent = tmp;
+					newnode->height=1;
+					setHeight(newnode);
 					return true;
 				}
 				else {
@@ -158,6 +148,8 @@ bool AVL::insert(string ab, string d) {
 				if (tmp->right == NULL) {
 					tmp->right = newnode;
 					tmp->right->parent = tmp;
+					newnode->height=1;
+					setHeight(newnode);
 					return true;
 				}
 				else {
