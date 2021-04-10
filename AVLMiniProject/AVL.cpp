@@ -1,41 +1,79 @@
 
-/**************************************************************/
-/* Part 1:                                                    */ /* Name the methods below with the correct name from the list */
-/* below:                                                     */
-/*    find                                                    */
-/*    insert                                                  */
-/*    printTreePre                                            */
-/*    printTreeIO                                             */
-/*    printTreePost                                           */
-/*                                                            */
-/* Once you have named them, move them to into the AVL Class  */
-/* Definition file (the .cpp), below the constructors (scroll */
-/* down and you'll see the constructors)                      */
-/**************************************************************/
-/********************* method 1 *******************************/
-void AVL::_______________________(TNode *tmp) {
+/*************************************************************/
+/*Part 2                                                     */
+/* Now you must do two things:                               */
+/* 1) add a count to the find method such that it counts how */
+/*    many comparisions you do every time you find an        */
+/*    abbreviation; and                                      */
+/* 2) in the insert method, add a call to the setHeight      */
+/*    method in the appropriate place(s) so that after you   */
+/*    inserted, the setHeight method adjusts the heights of  */
+/*    the inserted node's ancestors.
+/*************************************************************/
+
+/*************************************************************/
+/*Part 3                                                     */
+/* Write the methods (in red, below) that are part of the    */
+/* AVL Tree class                                            */
+/*************************************************************/
+
+#include <iostream>
+#include <stdlib.h>
+#include "AVL.hpp"
+using namespace std;
+
+/*************************************************************/
+/* Constructors
+   debug is a boolean flag that, if set, will result in the
+   printing of a number of debug statements.  If it isn't
+   set, the code will print without the debug statements.
+*/
+AVL::AVL() {
+	root = NULL;
+	debug = false;
+}
+
+AVL::AVL(bool debflag) {
+	root = NULL;
+	debug = debflag;
+}
+
+AVL::AVL(string ab, string d) {
+	root = new TNode(ab, d, false);
+	debug = false;
+
+}
+
+AVL::AVL(string ab, string d, bool debflag) {
+	root = new TNode(ab, d, debflag);
+	debug = debflag;
+
+}
+
+void AVL::printTreePre(TNode *tmp) {
 	if (tmp == NULL) {
 		return;
 	}
 	else {
 		tmp->printNode(debug);
-		ннннннннннннннннннннннннннннннннн_______________________(tmp->left);
-		_______________________(tmp->right);
+		printTreePre(tmp->left);
+		printTreePre(tmp->right);
 	}
 }
-/********************* method 2 *******************************/
-void AVL::___________________(TNode *tmp) {
+
+void AVL::printTreePost(TNode *tmp) {
 	if (tmp == NULL) {
 		return;
 	}
 	else {
-		___________________(tmp->left);
-		___________________(tmp->right);
+		printTreePost(tmp->left);
+		printTreePost(tmp->right);
 		tmp->printNode(debug);
 	}
 }
-/********************* method 3 *******************************/
-TNode *AVL::____________________(string a) {
+
+TNode *AVL::find(string a) {
+	int ct = 0;
 	if (root == NULL) {
 		if (debug) {
 		   cout << "root is null " << a << endl;
@@ -72,7 +110,8 @@ TNode *AVL::____________________(string a) {
 			}
 			else {
 				if (debug) {
-					//cout << " in " << ct << endl;
+					ct+=1;
+					cout << " in " << ct << endl;
 				}
 				return tmp;
 			}
@@ -80,22 +119,22 @@ TNode *AVL::____________________(string a) {
 	}
 	return NULL;
 }
-/********************* method 4 *******************************/
-void AVL::________________(TNode *tmp) {
+
+void AVL::printTreeIO(TNode *tmp) {
 	if (tmp == NULL) {
 		return;
 	}
 	else {
-		____________________(tmp->left);
+		printTreeIO(tmp->left);
 		tmp->printNode(debug);
-		____________________(tmp->right);
+		printTreeIO(tmp->right);
 	}
 }
-/********************* method 5 *******************************/
-bool AVL::___________________(string ab, string d) {
+
+bool AVL::insert(string ab, string d) {
 	TNode *newnode = new TNode(ab, d, debug);
 
-	if (root == NULL) {		
+	if (root == NULL) {
 		if (debug ) {
 		    cout << "root NULL" << endl;
 		}
@@ -132,62 +171,6 @@ bool AVL::___________________(string ab, string d) {
 	}
 	return false;
 }
-/*******************End of Naming Methods*********************/
-/* Now move the methods above (with the blanks filled in     */
-/* correctly below the constructors, below                   */
-/*************************************************************/
-
-/*************************************************************/
-/*Part 2                                                     */
-/* Now you must do two things:                               */
-/* 1) add a count to the find method such that it counts how */
-/*    many comparisions you do every time you find an        */
-/*    abbreviation; and                                      */
-/* 2) in the insert method, add a call to the setHeight      */
-/*    method in the appropriate place(s) so that after you   */
-/*    inserted, the setHeight method adjusts the heights of  */
-/*    the inserted node's ancestors.
-/*************************************************************/
-
-/*************************************************************/
-/*Part 3                                                     */
-/* Write the methods (in red, below) that are part of the    */
-/* AVL Tree class                                            */
-/*************************************************************/
-
-#include "AVL.hpp"
-
-#include <iostream>
-#include <stdlib.h>
-using namespace std;
-
-/*************************************************************/
-/* Constructors 
-   debug is a boolean flag that, if set, will result in the 
-   printing of a number of debug statements.  If it isn't
-   set, the code will print without the debug statements.
-*/
-AVL::AVL() {
-	root = NULL;
-	debug = false;
-}
-
-AVL::AVL(bool debflag) {
-	root = NULL;
-	debug = debflag;
-}
-
-AVL::AVL(string ab, string d) {
-	root = new TNode(ab, d, false);
-	debug = false;
-
-}
-
-AVL::AVL(string ab, string d, bool debflag) {
-	root = new TNode(ab, d, debflag);
-	debug = debflag;
-
-}
 /*************************************************************/
 /*Methods you have to write                                  */
 /*These methods are specifically for an AVL tree, which means*/
@@ -215,7 +198,7 @@ TNode *AVL::rotateLeft(TNode *tmp) {
 void AVL::setHeight(TNode *tmp) {
 /*
 This method sets the height of tmp and then of all the ancestors of tmp.  It stops when the height of a node does not change. Note that this method most likely calls getBalance and possibly the rotate methods, and may even set the newly rotated up node's parent attachement, although you could do that in the rotate method.
-*/ 
+*/
 }
 void AVL::printTreeIO() {
 	if (root == NULL ) {
