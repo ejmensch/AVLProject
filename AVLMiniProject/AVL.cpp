@@ -175,11 +175,40 @@ bool AVL::insert(string ab, string d) {
 int AVL::getBalance(TNode *tmp) {
 /* method that finds the balance of a node tmp and returns that balance as an int
 */
+//left kid - right kid == balance
+	int leftkid=0;
+	int rightkid=0; //initializes ends (leaves?) to 0
+	if(tmp->left != NULL){
+		leftkid = tmp->left->height;
+	}
+	if(tmp->right != NULL){
+		rightkid = tmp->right->height;
+	}
+	return (leftkid-rightkid);   //should work hopefully, we'll find out when we test
 }
 
 TNode *AVL::rotateRight(TNode *tmp) {
 /* rotates right around node tmp and returns the node rotated up.  Note: this method must reset the heights of the node rotated down and the nodes rotated up, and you must reset the heights of all nodes that are ancestors of the node rotated down.  You will also need to reattach the newly rotated up node to the rest of the tree either in this method or in setheights.
 */
+	TNode *first = tmp->left;
+	TNode *second = tmp->right;
+
+	first->right = tmp;
+	tmp->left = second;
+	//have to update heights now, prolly some edge cases too.
+	if(second->left->height > second->right->height){
+		second->height = second->left->height + 1;
+	}
+	else{
+		second->height = second->right->height + 1;
+	}
+	if(first->left->height > first->right->height){
+		first->height = first->left->height +1;
+	}
+	else{
+		first->height = first->right->height +1;
+	}
+	return first; //this is not done
 }
 
 TNode *AVL::rotateLeft(TNode *tmp) {
