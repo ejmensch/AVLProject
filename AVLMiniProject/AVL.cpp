@@ -195,6 +195,23 @@ TNode *AVL::rotateRight(TNode *tmp) {
 
 	first->right = tmp;
 	tmp->left = second;
+	if (tmp==root) {
+		first->parent=NULL;
+		root=first;
+	}
+	else {
+		first->parent=tmp->parent;
+		if (tmp->parent->right != NULL) {
+			if (tmp->parent->right == tmp) {
+				tmp->parent->right = first;
+			}
+		}
+		if (tmp->parent->left!=NULL) {
+			if (tmp->parent->left == tmp) {
+				tmp->parent->left = first;
+			}
+		}
+	}
 	//have to update heights now, prolly some edge cases too.
 	if(second->left->height > second->right->height){
 		second->height = second->left->height + 1;
@@ -212,6 +229,41 @@ TNode *AVL::rotateRight(TNode *tmp) {
 }
 
 TNode *AVL::rotateLeft(TNode *tmp) {
+	TNode *first= tmp->right;
+	TNode *second = tmp->left;
+
+	first->left = tmp;
+	tmp->right = second;
+	if (tmp==root){
+		first->parent = NULL;
+		root = first;
+	}
+	else{
+		first->parent = tmp->parent;
+		if (tmp->parent->right != NULL){
+			if (tmp->parent->right == tmp) {
+				tmp->parent->right=first;
+			}
+		}
+		if (tmp->parent->left != NULL){
+			if(tmp->parent->left == tmp){
+				tmp->parent->left = first;
+			}
+		}
+	}
+	if(second->right->height > second->left->height) {
+		second->height = second->right->height + 1;
+	}
+	else {
+		second->height = second->left->height + 1;
+	}
+	if(first->right->height > first->left->height) {
+		first->height = first->right->height + 1;
+	}
+	else {
+		first->height = first->left->height + 1;
+	}
+	return first;
 /* rotates down around node tmp and returns the node rotated up.  Note: this method must reset the heights of the node rotated down and the nodes rotated up, and you must reset the heights of all nodes that are ancestors of the node rotated down. You will also need to reattach the newly rotated up node to the rest of the tree either in this method or in setheights.
 */
 }
@@ -220,6 +272,10 @@ void AVL::setHeight(TNode *tmp) {
 /*
 This method sets the height of tmp and then of all the ancestors of tmp.  It stops when the height of a node does not change. Note that this method most likely calls getBalance and possibly the rotate methods, and may even set the newly rotated up node's parent attachement, although you could do that in the rotate method.
 */
+	if(tmp==root){
+		return;
+	}
+
 }
 void AVL::printTreeIO() {
 	if (root == NULL ) {
