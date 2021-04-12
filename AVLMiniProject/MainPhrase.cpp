@@ -22,20 +22,20 @@ int main() {
 
 
 /***** Part 2 testing the right rotations *****/
-//	Translator *tree = new Translator("TestRight.txt",true);
-//	cout << endl<<endl<<"************************************" << endl;
-//	cout <<"Preorder:" << endl;
-//	tree->tree->printTreePre();
-//	cout << endl<<endl<<"************************************" << endl;
-//	cout <<"Inorder:" << endl;
-//	tree->tree->printTreeIO();
-//	cout << endl<<endl<< "************************************" << endl;
-//	cout <<"Postorder:" << endl;
-//	tree->tree->printTreePost();
-//	cout << endl<<endl<< "************************************" << endl;
-//	tree->tree->clearTree();
-//
-//	delete tree;
+	Translator *tree = new Translator("TestRight.txt",true);
+	cout << endl<<endl<<"************************************" << endl;
+	cout <<"Preorder:" << endl;
+	tree->tree->printTreePre();
+	cout << endl<<endl<<"************************************" << endl;
+	cout <<"Inorder:" << endl;
+	tree->tree->printTreeIO();
+	cout << endl<<endl<< "************************************" << endl;
+	cout <<"Postorder:" << endl;
+	tree->tree->printTreePost();
+	cout << endl<<endl<< "************************************" << endl;
+	tree->tree->clearTree();
+
+	delete tree;
 /************End of Part 2 **********************/
 
 /***** Part 3 testing the right-left rotations *****/
@@ -74,11 +74,11 @@ int main() {
 /*********End of Part 4 ***********************/
 
 /*****And now for the big tree!!!  Part 7 *************/
-	Translator *tree = new Translator("abbr.txt", true);
-	tree->tree->printTreeIO();
-	cout << endl<<endl<< "************************************" << endl;
-	tree->Interface();
-	return 0;
+//	Translator *tree = new Translator("abbr.txt", true);
+//	tree->tree->printTreeIO();
+//	cout << endl<<endl<< "************************************" << endl;
+//	tree->Interface();
+//	return 0;
 }
 
 

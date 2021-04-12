@@ -191,7 +191,7 @@ TNode *AVL::rotateRight(TNode *tmp) {
 /* rotates right around node tmp and returns the node rotated up.  Note: this method must reset the heights of the node rotated down and the nodes rotated up, and you must reset the heights of all nodes that are ancestors of the node rotated down.  You will also need to reattach the newly rotated up node to the rest of the tree either in this method or in setheights.
 */
 	TNode *first = tmp->left;
-	TNode *second = tmp->right;
+	TNode *second = first->right;
 
 	first->right = tmp;
 	tmp->left = second;
@@ -212,13 +212,52 @@ TNode *AVL::rotateRight(TNode *tmp) {
 			}
 		}
 	}
+
+	tmp->parent = first;
+	//second->parent = tmp; //possibly not needed,idk might not ven be correct anyway
+
 	//have to update heights now, prolly some edge cases too.
+	//order of height checking should be second,tmp,first i think (if im doing right rotation correctly)
+	//second
+	if(second->left == NULL && second->right == NULL){  //if no children, set heights to 1
+		second->height=1;
+	}
+	if(second->right == NULL){ //if it only has a left child, base height off of left child
+		second->height= second->left->height;
+	}
+	if(second->left == NULL){  //if it only has a right child, base height off of right child
+		second->height= second->right->height + 1;
+	}
+
+	//tmp ... could be unnecessary, idk
+	if (tmp->left == NULL && tmp->right == NULL) { //if no children, set heights to 1
+		tmp->height = 1;
+	}
+	if (tmp->right == NULL) { //if it only has a left child, base height off of left child
+		tmp->height = tmp->left->height;
+	}
+	if (tmp->left == NULL) { //if it only has a right child, base height off of right child
+		tmp->height = tmp->right->height + 1;
+	}
+
+	//first... could also be unnecessary
+	if (first->left == NULL && first->right == NULL) { //if no children, set heights to 1
+		first->height = 1;
+	}
+	if (first->right == NULL) { //if it only has a left child, base height off of left child
+		first->height = first->left->height;
+	}
+	if (first->left == NULL) { //if it only has a right child, base height off of right child
+		first->height = first->right->height + 1;
+	}
+
 	if(second->left->height > second->right->height){
 		second->height = second->left->height + 1;
 	}
 	else{
 		second->height = second->right->height + 1;
 	}
+	//do we need to put tmp in the middle here?
 	if(first->left->height > first->right->height){
 		first->height = first->left->height +1;
 	}
@@ -230,7 +269,7 @@ TNode *AVL::rotateRight(TNode *tmp) {
 
 TNode *AVL::rotateLeft(TNode *tmp) {
 	TNode *first= tmp->right;
-	TNode *second = tmp->left;
+	TNode *second = first->left;
 
 	first->left = tmp;
 	tmp->right = second;
@@ -251,6 +290,49 @@ TNode *AVL::rotateLeft(TNode *tmp) {
 			}
 		}
 	}
+	tmp->parent=first;
+	//second->parent=tmp;
+	//copied over from rotate right, just commented out for now
+//	//second
+//	if (second->left == NULL && second->right == NULL) { //if no children, set heights to 1
+//		second->height = 1;
+//	}
+//	if (second->right == NULL) { //if it only has a left child, base height off of left child
+//		second->height = second->left->height;
+//	}
+//	if (second->left == NULL) { //if it only has a right child, base height off of right child
+//		second->height = second->right->height + 1;
+//	}
+//
+//	//tmp ... could be unnecessary, idk
+//	if (tmp->left == NULL && tmp->right == NULL) { //if no children, set heights to 1
+//		tmp->height = 1;
+//	}
+//	if (tmp->right == NULL) { //if it only has a left child, base height off of left child
+//		tmp->height = tmp->left->height;
+//	}
+//	if (tmp->left == NULL) { //if it only has a right child, base height off of right child
+//		tmp->height = tmp->right->height + 1;
+//	}
+//
+//	//first... could also be unnecessary
+//	if (first->left == NULL && first->right == NULL) { //if no children, set heights to 1
+//		first->height = 1;
+//	}
+//	if (first->right == NULL) { //if it only has a left child, base height off of left child
+//		first->height = first->left->height;
+//	}
+//	if (first->left == NULL) { //if it only has a right child, base height off of right child
+//		first->height = first->right->height + 1;
+//	}
+
+
+
+
+
+
+
+
 	if(second->right->height > second->left->height) {
 		second->height = second->right->height + 1;
 	}
@@ -275,6 +357,7 @@ This method sets the height of tmp and then of all the ancestors of tmp.  It sto
 	if(tmp==root){
 		return;
 	}
+
 
 }
 void AVL::printTreeIO() {
