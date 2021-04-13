@@ -188,8 +188,8 @@ int AVL::getBalance(TNode *tmp) {
 }
 
 TNode *AVL::rotateRight(TNode *tmp) {
-/* rotates right around node tmp and returns the node rotated up.  Note: this method must reset the heights of the node rotated down and the nodes rotated up, and you must reset the heights of all nodes that are ancestors of the node rotated down.  You will also need to reattach the newly rotated up node to the rest of the tree either in this method or in setheights.
-*/
+	/* rotates right around node tmp and returns the node rotated up.  Note: this method must reset the heights of the node rotated down and the nodes rotated up, and you must reset the heights of all nodes that are ancestors of the node rotated down.  You will also need to reattach the newly rotated up node to the rest of the tree either in this method or in setheights.
+	 */
 	TNode *first = tmp->left;
 	TNode *second = first->right;
 
@@ -354,10 +354,34 @@ void AVL::setHeight(TNode *tmp) {
 /*
 This method sets the height of tmp and then of all the ancestors of tmp.  It stops when the height of a node does not change. Note that this method most likely calls getBalance and possibly the rotate methods, and may even set the newly rotated up node's parent attachement, although you could do that in the rotate method.
 */
-	if(tmp==root){
+	if (tmp==root){
 		return;
 	}
-
+	if (tmp->parent->left != NULL && tmp->parent->right != NULL) {
+		int flag = 1;
+		if (tmp->parent->right == tmp) {
+			flag = 0;
+		}
+		if (flag == 0) {
+			if (tmp->height >= tmp->parent->left->height) {
+				tmp->parent->height = tmp->height + 1;
+				setHeight(tmp->parent);
+			}
+		}
+		else if (flag == 1){
+			if (tmp->height >= tmp->parent->right->height) {
+				tmp->parent->height = tmp->height + 1;
+				setHeight(tmp->parent);
+			}
+		}
+	}
+	else {
+		if(tmp->parent->height != tmp->height) {
+			tmp->parent->height = tmp->height + 1;
+			setHeight(tmp->parent);
+		}
+	}
+	return;
 
 }
 void AVL::printTreeIO() {
