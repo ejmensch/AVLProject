@@ -214,7 +214,7 @@ TNode *AVL::rotateRight(TNode *tmp) {
 	}
 
 	tmp->parent = first;
-	//second->parent = tmp; //possibly not needed,idk might not ven be correct anyway
+	//second->parent = tmp; //possibly not needed,idk might not even be correct anyway
 
 	//have to update heights now, prolly some edge cases too.
 	//order of height checking should be second,tmp,first i think (if im doing right rotation correctly)
@@ -264,7 +264,7 @@ TNode *AVL::rotateRight(TNode *tmp) {
 	else{
 		first->height = first->right->height +1;
 	}
-	return first; //this is not done
+	return first; //this is not  done
 }
 
 TNode *AVL::rotateLeft(TNode *tmp) {
@@ -355,32 +355,54 @@ void AVL::setHeight(TNode *tmp) {
 This method sets the height of tmp and then of all the ancestors of tmp.  It stops when the height of a node does not change. Note that this method most likely calls getBalance and possibly the rotate methods, and may even set the newly rotated up node's parent attachement, although you could do that in the rotate method.
 */
 	if (tmp==root){
+		// this catches "if (tmp->parent == NULL)"
 		return;
 	}
+	int bal = getBalance(tmp);
+	int rightBal = getBalance(tmp->right);
+	int leftBal = getBalance(tmp->left);
 	if (tmp->parent->left != NULL && tmp->parent->right != NULL) {
-		int flag = 1;
-		if (tmp->parent->right == tmp) {
-			flag = 0;
-		}
-		if (flag == 0) {
+		if (tmp->parent->right == tmp ) {
 			if (tmp->height >= tmp->parent->left->height) {
 				tmp->parent->height = tmp->height + 1;
-				setHeight(tmp->parent);
+				//rotateRight(tmp);
 			}
 		}
-		else if (flag == 1){
+		else{ // tmp is left child
 			if (tmp->height >= tmp->parent->right->height) {
 				tmp->parent->height = tmp->height + 1;
-				setHeight(tmp->parent);
 			}
 		}
 	}
 	else {
-		if(tmp->parent->height != tmp->height) {
+		if(tmp->parent->height != tmp->height + 1) {
 			tmp->parent->height = tmp->height + 1;
-			setHeight(tmp->parent);
 		}
 	}
+	if (bal == 2) { // RR rot or LR rot
+		rotateRight(tmp->left);
+	} else if (bal==-2) { // LL rot or RL rot
+
+	} // source :     btechsmartclass.com/data_structures/avl-trees.html
+	setHeight(tmp->parent);
+
+
+
+//	if(getBalance(tmp)==2){  //balance is left kid - right kid
+//		if(getBalance(tmp->left) == 1){
+//			rotateRight(tmp); //do we set something to this since it returns a node?
+//		}
+//		else{
+//			rotateLeft(tmp);
+//		}
+//	}
+//	else if(getBalance(tmp)==-2){
+//		if (getBalance(tmp->right) == 1) {
+//			rotateRight(tmp); //do we set something to this since it returns a node?
+//		} else {
+//			rotateLeft(tmp);
+//		}
+//	}
 	return;
 
 }
