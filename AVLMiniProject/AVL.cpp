@@ -357,6 +357,7 @@ This method sets the height of tmp and then of all the ancestors of tmp.  It sto
 	if (tmp==root){
 		return;
 	}
+	/*
 	if (tmp->parent->left != NULL && tmp->parent->right != NULL) {
 		int flag = 1;
 		if (tmp->parent->right == tmp) {
@@ -382,6 +383,7 @@ This method sets the height of tmp and then of all the ancestors of tmp.  It sto
 		}
 	}
 	return;
+	*/
 
 }
 void AVL::printTreeIO() {
