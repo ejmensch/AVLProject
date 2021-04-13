@@ -358,13 +358,9 @@ This method sets the height of tmp and then of all the ancestors of tmp.  It sto
 		// this catches "if (tmp->parent == NULL)"
 		return;
 	}
-<<<<<<< HEAD
 	int bal = getBalance(tmp);
 	int rightBal = getBalance(tmp->right);
 	int leftBal = getBalance(tmp->left);
-=======
-	/*
->>>>>>> branch 'master' of https://github.com/ejmensch/AVLProject
 	if (tmp->parent->left != NULL && tmp->parent->right != NULL) {
 		if (tmp->parent->right == tmp ) {
 			if (tmp->height >= tmp->parent->left->height) {
@@ -408,7 +404,6 @@ This method sets the height of tmp and then of all the ancestors of tmp.  It sto
 //		}
 //	}
 	return;
-	*/
 
 }
 void AVL::printTreeIO() {
