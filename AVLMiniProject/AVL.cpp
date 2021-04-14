@@ -5,6 +5,7 @@
 /*************************************************************/
 
 #include <iostream>
+#include <stdio.h>
 #include <stdlib.h>
 #include "AVL.hpp"
 using namespace std;
@@ -121,6 +122,8 @@ void AVL::printTreeIO(TNode *tmp) {
 bool AVL::insert(string ab, string d) {
 	TNode *newnode = new TNode(ab, d, debug);
 
+
+	cout << " yadda yadda " + ab << endl;
 	if (root == NULL) {
 		if (debug ) {
 		    cout << "root NULL" << endl;
@@ -176,6 +179,10 @@ int AVL::getBalance(TNode *tmp) {
 /* method that finds the balance of a node tmp and returns that balance as an int
 */
 //left kid - right kid == balance
+	if (tmp == NULL) {
+		return 0;
+	}
+
 	int leftkid=0;
 	int rightkid=0; //initializes ends (leaves?) to 0
 	if(tmp->left != NULL){
@@ -190,162 +197,142 @@ int AVL::getBalance(TNode *tmp) {
 TNode *AVL::rotateRight(TNode *tmp) {
 	/* rotates right around node tmp and returns the node rotated up.  Note: this method must reset the heights of the node rotated down and the nodes rotated up, and you must reset the heights of all nodes that are ancestors of the node rotated down.  You will also need to reattach the newly rotated up node to the rest of the tree either in this method or in setheights.
 	 */
+	cout << "rotateRight\n";
+	cout << tmp->abbr << endl;
 	TNode *first = tmp->left;
 	TNode *second = first->right;
 
-	first->right = tmp;
-	tmp->left = second;
 	if (tmp==root) {
 		first->parent=NULL;
 		root=first;
 	}
-	else {
-		first->parent=tmp->parent;
-		if (tmp->parent->right != NULL) {
-			if (tmp->parent->right == tmp) {
-				tmp->parent->right = first;
-			}
-		}
-		if (tmp->parent->left!=NULL) {
-			if (tmp->parent->left == tmp) {
-				tmp->parent->left = first;
-			}
+	first->right = tmp;
+	tmp->left = second;
+	first->parent = tmp->parent;
+	if (tmp->parent != NULL) {
+		if (tmp->parent->left == tmp) {
+			tmp->parent->left = first;
+		} else if (tmp->parent->right == tmp) {
+			tmp->parent->right = first;
 		}
 	}
-
+	if (second != NULL) {
+		second->parent = tmp;
+	}
 	tmp->parent = first;
 	//second->parent = tmp; //possibly not needed,idk might not even be correct anyway
 
 	//have to update heights now, prolly some edge cases too.
 	//order of height checking should be second,tmp,first i think (if im doing right rotation correctly)
-	//second
-	if(second->left == NULL && second->right == NULL){  //if no children, set heights to 1
-		second->height=1;
-	}
-	if(second->right == NULL){ //if it only has a left child, base height off of left child
-		second->height= second->left->height;
-	}
-	if(second->left == NULL){  //if it only has a right child, base height off of right child
-		second->height= second->right->height + 1;
-	}
+
+	// adjust heights:
 
 	//tmp ... could be unnecessary, idk
 	if (tmp->left == NULL && tmp->right == NULL) { //if no children, set heights to 1
 		tmp->height = 1;
-	}
-	if (tmp->right == NULL) { //if it only has a left child, base height off of left child
-		tmp->height = tmp->left->height;
-	}
-	if (tmp->left == NULL) { //if it only has a right child, base height off of right child
+	} else if (tmp->right == NULL) { //if it only has a left child, base height off of left child
+		tmp->height = tmp->left->height + 1;
+	} else if (tmp->left == NULL) { //if it only has a right child, base height off of right child
 		tmp->height = tmp->right->height + 1;
+	} else { // both children exist
+		tmp->height = max(tmp->right->height, tmp->left->height) + 1;
 	}
 
 	//first... could also be unnecessary
 	if (first->left == NULL && first->right == NULL) { //if no children, set heights to 1
 		first->height = 1;
-	}
-	if (first->right == NULL) { //if it only has a left child, base height off of left child
-		first->height = first->left->height;
-	}
-	if (first->left == NULL) { //if it only has a right child, base height off of right child
+	} else if (first->right == NULL) { //if it only has a left child, base height off of left child
+		first->height = first->left->height + 1;
+	} else if (first->left == NULL) { //if it only has a right child, base height off of right child
 		first->height = first->right->height + 1;
+	} else { // both children exist
+		first->height = max(first->right->height, first->left->height) + 1;
 	}
 
-	if(second->left->height > second->right->height){
-		second->height = second->left->height + 1;
+
+	cout << tmp->abbr << endl;
+	cout << "first->abbr : " << first->abbr << endl;
+	if (tmp->left != NULL) {
+		cout << "tmp->left->abbr : " << tmp->left->abbr << endl;
 	}
-	else{
-		second->height = second->right->height + 1;
+	if (first->left != NULL) {
+		cout << "first->left->abbr : "<< first->left->abbr << endl;
 	}
-	//do we need to put tmp in the middle here?
-	if(first->left->height > first->right->height){
-		first->height = first->left->height +1;
+	if (first->right != NULL) {
+		cout << "first->right->abbr : "<< first->right->abbr << endl;
 	}
-	else{
-		first->height = first->right->height +1;
-	}
+
+
 	return first; //this is not  done
 }
 
 TNode *AVL::rotateLeft(TNode *tmp) {
-	TNode *first= tmp->right;
+	cout << "rotateLeft\n";
+
+	TNode *first = tmp->right;
 	TNode *second = first->left;
 
+	if (tmp==root) {
+		first->parent=NULL;
+		root=first;
+	}
 	first->left = tmp;
 	tmp->right = second;
-	if (tmp==root){
-		first->parent = NULL;
-		root = first;
-	}
-	else{
-		first->parent = tmp->parent;
-		if (tmp->parent->right != NULL){
-			if (tmp->parent->right == tmp) {
-				tmp->parent->right=first;
-			}
-		}
-		if (tmp->parent->left != NULL){
-			if(tmp->parent->left == tmp){
-				tmp->parent->left = first;
-			}
+	first->parent = tmp->parent;
+	if (tmp->parent != NULL) {
+		if (tmp->parent->left == tmp) {
+			tmp->parent->left = first;
+		} else if (tmp->parent->right == tmp) {
+			tmp->parent->right = first;
 		}
 	}
-	tmp->parent=first;
-	//second->parent=tmp;
-	//copied over from rotate right, just commented out for now
-//	//second
-//	if (second->left == NULL && second->right == NULL) { //if no children, set heights to 1
-//		second->height = 1;
-//	}
-//	if (second->right == NULL) { //if it only has a left child, base height off of left child
-//		second->height = second->left->height;
-//	}
-//	if (second->left == NULL) { //if it only has a right child, base height off of right child
-//		second->height = second->right->height + 1;
-//	}
-//
-//	//tmp ... could be unnecessary, idk
-//	if (tmp->left == NULL && tmp->right == NULL) { //if no children, set heights to 1
-//		tmp->height = 1;
-//	}
-//	if (tmp->right == NULL) { //if it only has a left child, base height off of left child
-//		tmp->height = tmp->left->height;
-//	}
-//	if (tmp->left == NULL) { //if it only has a right child, base height off of right child
-//		tmp->height = tmp->right->height + 1;
-//	}
-//
-//	//first... could also be unnecessary
-//	if (first->left == NULL && first->right == NULL) { //if no children, set heights to 1
-//		first->height = 1;
-//	}
-//	if (first->right == NULL) { //if it only has a left child, base height off of left child
-//		first->height = first->left->height;
-//	}
-//	if (first->left == NULL) { //if it only has a right child, base height off of right child
-//		first->height = first->right->height + 1;
-//	}
-
-//plz let me push
-
-
-
-
-
-
-	if(second->right->height > second->left->height) {
-		second->height = second->right->height + 1;
+	if (second != NULL) {
+		second->parent = tmp;
 	}
-	else {
-		second->height = second->left->height + 1;
+	tmp->parent = first;
+	//second->parent = tmp; //possibly not needed,idk might not even be correct anyway
+
+	//have to update heights now, prolly some edge cases too.
+	//order of height checking should be second,tmp,first i think (if im doing right rotation correctly)
+
+	// adjust heights:
+
+	//tmp ... could be unnecessary, idk
+	if (tmp->left == NULL && tmp->right == NULL) { //if no children, set heights to 1
+		tmp->height = 1;
+	} else if (tmp->right == NULL) { //if it only has a left child, base height off of left child
+		tmp->height = tmp->left->height + 1;
+	} else if (tmp->left == NULL) { //if it only has a right child, base height off of right child
+		tmp->height = tmp->right->height + 1;
+	} else { // both children exist
+		tmp->height = max(tmp->right->height, tmp->left->height) + 1;
 	}
-	if(first->right->height > first->left->height) {
-		first->height = first->right->height + 1;
-	}
-	else {
+
+	//first... could also be unnecessary
+	if (first->left == NULL && first->right == NULL) { //if no children, set heights to 1
+		first->height = 1;
+	} else if (first->right == NULL) { //if it only has a left child, base height off of left child
 		first->height = first->left->height + 1;
+	} else if (first->left == NULL) { //if it only has a right child, base height off of right child
+		first->height = first->right->height + 1;
+	} else { // both children exist
+		first->height = max(first->right->height, first->left->height) + 1;
 	}
-	return first;
+
+
+	cout << tmp->abbr << endl;
+	cout << "first->abbr : " << first->abbr << endl;
+	if (tmp->left != NULL) {
+		cout << "tmp->left->abbr : " << tmp->left->abbr << endl;
+	}
+	if (first->left != NULL) {
+		cout << "first->left->abbr : "<< first->left->abbr << endl;
+	}
+	if (first->right != NULL) {
+		cout << "first->right->abbr : "<< first->right->abbr << endl;
+	}
+
+	return first; //this is not  done
 /* rotates down around node tmp and returns the node rotated up.  Note: this method must reset the heights of the node rotated down and the nodes rotated up, and you must reset the heights of all nodes that are ancestors of the node rotated down. You will also need to reattach the newly rotated up node to the rest of the tree either in this method or in setheights.
 */
 }
@@ -354,55 +341,58 @@ void AVL::setHeight(TNode *tmp) {
 /*
 This method sets the height of tmp and then of all the ancestors of tmp.  It stops when the height of a node does not change. Note that this method most likely calls getBalance and possibly the rotate methods, and may even set the newly rotated up node's parent attachement, although you could do that in the rotate method.
 */
+	cout << "setHeight on " << tmp->abbr << endl;
 	if (tmp==root){
 		// this catches "if (tmp->parent == NULL)"
-		return;
+		cout << "tmp==root \n";
+	} else {
+		if (tmp->parent->left != NULL && tmp->parent->right != NULL) {
+			if (tmp->parent->right == tmp ) {
+				if (tmp->height >= tmp->parent->left->height) {
+					tmp->parent->height = tmp->height + 1;
+					//rotateRight(tmp);
+				}
+			}
+			else{ // tmp is left child
+				if (tmp->height >= tmp->parent->right->height) {
+					tmp->parent->height = tmp->height + 1;
+				}
+			}
+		}
+		else {
+			if(tmp->parent->height != tmp->height + 1) {
+				tmp->parent->height = tmp->height + 1;
+			}
+		}
 	}
 	int bal = getBalance(tmp);
 	int rightBal = getBalance(tmp->right);
 	int leftBal = getBalance(tmp->left);
-	if (tmp->parent->left != NULL && tmp->parent->right != NULL) {
-		if (tmp->parent->right == tmp ) {
-			if (tmp->height >= tmp->parent->left->height) {
-				tmp->parent->height = tmp->height + 1;
-				//rotateRight(tmp);
-			}
-		}
-		else{ // tmp is left child
-			if (tmp->height >= tmp->parent->right->height) {
-				tmp->parent->height = tmp->height + 1;
-			}
-		}
-	}
-	else {
-		if(tmp->parent->height != tmp->height + 1) {
-			tmp->parent->height = tmp->height + 1;
-		}
-	}
+	//Ethan's attempt at completing it
 	if (bal == 2) { // RR rot or LR rot
-		rotateRight(tmp->left);
-	} else if (bal==-2) { // LL rot or RL rot
-
+		cout << "bal == 2\n";
+		if(leftBal==1){
+			rotateRight(tmp);
+		}
+		else{ // LR
+			rotateLeft(tmp->left);
+			rotateRight(tmp);
+		}
+	}
+	else if (bal==-2) { // LL rot or RL rot
+		if(rightBal==-1){
+			rotateLeft(tmp);
+		}
+		else{ // RL
+			rotateRight(tmp->right);
+			rotateLeft(tmp);
+		}
 	} // source :     btechsmartclass.com/data_structures/avl-trees.html
-	setHeight(tmp->parent);
+	if (tmp->parent != NULL) {
+		cout << "tmp->parent->abbr = " + tmp->parent->abbr << endl;
+		setHeight(tmp->parent);
+	}
 
-
-
-//	if(getBalance(tmp)==2){  //balance is left kid - right kid
-//		if(getBalance(tmp->left) == 1){
-//			rotateRight(tmp); //do we set something to this since it returns a node?
-//		}
-//		else{
-//			rotateLeft(tmp);
-//		}
-//	}
-//	else if(getBalance(tmp)==-2){
-//		if (getBalance(tmp->right) == 1) {
-//			rotateRight(tmp); //do we set something to this since it returns a node?
-//		} else {
-//			rotateLeft(tmp);
-//		}
-//	}
 	return;
 
 }

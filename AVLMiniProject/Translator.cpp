@@ -188,6 +188,7 @@ void Translator::readFile() {
 			cout << "readFile:  " << acr<<":"<<phrase<<endl;
 		}
 		tree->insert(acr,phrase);
+		tree->printTreeIO();
 		file >> acr;
 	}
 	return;
