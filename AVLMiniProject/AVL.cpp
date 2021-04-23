@@ -121,9 +121,6 @@ void AVL::printTreeIO(TNode *tmp) {
 
 bool AVL::insert(string ab, string d) {
 	TNode *newnode = new TNode(ab, d, debug);
-
-
-	cout << " yadda yadda " + ab << endl;
 	if (root == NULL) {
 		if (debug ) {
 		    cout << "root NULL" << endl;
@@ -192,8 +189,6 @@ int AVL::getBalance(TNode *tmp) {
 }
 
 TNode *AVL::rotateRight(TNode *tmp) {
-	cout << "rotateRight\n";
-	cout << tmp->abbr << endl;
 	TNode *first = tmp->left;
 	TNode *second = first->right;
 
@@ -241,10 +236,6 @@ TNode *AVL::rotateRight(TNode *tmp) {
 	else {
 		first->height = max(first->right->height, first->left->height) + 1;
 	}
-
-
-	cout << tmp->abbr << endl;
-	cout << "first->abbr : " << first->abbr << endl;
 	if (tmp->left != NULL) {
 		cout << "tmp->left->abbr : " << tmp->left->abbr << endl;
 	}
@@ -260,8 +251,6 @@ TNode *AVL::rotateRight(TNode *tmp) {
 }
 
 TNode *AVL::rotateLeft(TNode *tmp) {
-	cout << "rotateLeft\n";
-
 	TNode *first = tmp->right;
 	TNode *second = first->left;
 
@@ -324,7 +313,6 @@ TNode *AVL::rotateLeft(TNode *tmp) {
 }
 
 void AVL::setHeight(TNode *tmp) {
-	cout << "setHeight on " << tmp->abbr << endl;
 	if (tmp==root){
 		cout << "tmp==root \n";
 	}
@@ -370,7 +358,6 @@ void AVL::setHeight(TNode *tmp) {
 		}
 	}
 	if (tmp->parent != NULL) {
-		cout << "tmp->parent->abbr = " + tmp->parent->abbr << endl;
 		setHeight(tmp->parent);
 	}
 	return;
