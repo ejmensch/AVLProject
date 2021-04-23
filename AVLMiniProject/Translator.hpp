@@ -1,3 +1,5 @@
+//Bryce Leslie Ethan Mensch
+
 #ifndef TRANSLATOR_CPP_
 #define TRANSLATOR_CPP_
 #include <iostream>

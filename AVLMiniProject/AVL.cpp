@@ -1,3 +1,4 @@
+//Bryce Leslie Ethan Mensch
 /*************************************************************/
 /*Part 3                                                     */
 /* Write the methods (in red, below) that are part of the    */

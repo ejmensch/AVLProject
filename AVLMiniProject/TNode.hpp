@@ -1,3 +1,4 @@
+//Bryce Leslie Ethan Mensch
 #ifndef TNODE_HPP_
 #define TNODE_HPP_
 #include <iostream>

@@ -1,3 +1,5 @@
+//Bryce Leslie Ethan Mensch
+
 #include "Translator.hpp"
 
 #include <iostream>

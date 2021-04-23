@@ -1,3 +1,4 @@
+//Bryce Leslie Ethan Mensch
 #include <iostream>
 #include "Translator.hpp"
 using namespace std;
